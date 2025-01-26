@@ -52,7 +52,7 @@
           <p
             class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             <!-- START - first_responses -->
-            YYY
+            {{ first_response }}
             <!-- END - first_responses -->
           </p>
         </div>
@@ -75,7 +75,7 @@
           <p
             class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             <!-- START - last_responses -->
-            ZZZ
+            {{ last_response }}
             <!-- END - last_responses -->
           </p>
         </div>
@@ -100,7 +100,7 @@
           <p
             class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             <!-- START - high_rate_responses -->
-            VVV
+            {{ most_response }}
             <!-- END - high_rate_responses -->
           </p>
         </div>
@@ -115,8 +115,9 @@
           <thead>
             <tr
               class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-              <th class="px-4 py-3">Correo</th>
-              <th class="px-4 py-3">Fecha</th>
+              <th class="px-4 py-3">Nombre mascota</th>
+              <th class="px-4 py-3">Tipo Mascota</th>
+              <th class="px-4 py-3">Fecha de entrada</th>
             </tr>
           </thead>
           <tbody
@@ -129,6 +130,11 @@
                       <!-- START - row.email -->
                       {{ row.nombremascota }}
                       <!-- END - row.email -->
+                  </td>
+                  <td class="px-4 py-3 text-sm">
+                    <!-- START - row.saved -->
+                    {{ row.tipomascota }}
+                    <!-- END - row.saved -->
                   </td>
                   <td class="px-4 py-3 text-sm">
                       <!-- START - row.saved -->

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from collections import Counter
 # Create your views here.
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
@@ -27,12 +27,23 @@ def index(request):
      total_responses = len(response_dict.keys())
       # Valores de la respuesta
      responses = response_dict.values()
-
+     #FIRST RESPONSE
+     first_key = next(iter(response_dict))  # Obtiene la primera clave
+     first_response = response_dict[first_key]["saved"]
+     #Last Response
+     last_key = next(reversed(response_dict))
+     last_response = response_dict[last_key]["saved"]
+     #Most active day
+     date_counts = Counter(entry["saved"].split(",")[0] for entry in response_dict.values())
+     most_response = max(date_counts, key=date_counts.get)
      # Objeto con los datos a renderizar
      data = {
          'title': 'Landing - Dashboard',
          'total_responses': total_responses,
-         'responses': responses
+         'responses': responses,
+         'first_response': first_response,
+         'last_response': last_response,
+         'most_response': most_response
      }
      # Renderización en la plantilla
      return render(request, 'main/index.html', data)
