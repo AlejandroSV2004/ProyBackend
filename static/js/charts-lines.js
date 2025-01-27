@@ -1,41 +1,34 @@
-/**
- * For usage, visit Chart.js docs https://www.chartjs.org/docs/latest/
- */
+// Función para contar el número de apariciones de cada tipo de animal
+const countAnimals = (data) => {
+  const animalCounts = {};
+
+  Object.values(data).forEach(record => {
+    const animalType = record.tipomascota;
+    if (animalType) {
+      animalCounts[animalType] = (animalCounts[animalType] || 0) + 1;
+    }
+  });
+
+  return animalCounts;
+};
+
+// Configuración inicial del gráfico
 const lineConfig = {
   type: 'line',
   data: {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: [], // Se actualizará dinámicamente con los tipos de animales
     datasets: [
       {
-        label: 'Organic',
-        /**
-         * These colors come from Tailwind CSS palette
-         * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
-         */
+        label: 'Cantidad de apariciones',
         backgroundColor: '#0694a2',
         borderColor: '#0694a2',
-        data: [43, 48, 40, 54, 67, 73, 70],
+        data: [], // Se actualizará dinámicamente con las cantidades
         fill: false,
-      },
-      {
-        label: 'Paid',
-        fill: false,
-        /**
-         * These colors come from Tailwind CSS palette
-         * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
-         */
-        backgroundColor: '#7e3af2',
-        borderColor: '#7e3af2',
-        data: [24, 50, 64, 74, 52, 51, 65],
       },
     ],
   },
   options: {
     responsive: true,
-    /**
-     * Default legends are ugly and impossible to style.
-     * See examples in charts.html to add your own legends
-     *  */
     legend: {
       display: false,
     },
@@ -50,22 +43,42 @@ const lineConfig = {
     scales: {
       x: {
         display: true,
-        scaleLabel: {
+        title: {
           display: true,
-          labelString: 'Month',
+          text: 'Tipo de Animal',
         },
       },
       y: {
         display: true,
-        scaleLabel: {
+        title: {
           display: true,
-          labelString: 'Value',
+          text: 'Número de Apariciones',
         },
       },
     },
   },
-}
+};
 
-// change this to the id of your chart element in HMTL
-const lineCtx = document.getElementById('line')
-window.myLine = new Chart(lineCtx, lineConfig)
+// Crear gráfico en el canvas con id 'line'
+const lineCtx = document.getElementById('line');
+window.myLine = new Chart(lineCtx, lineConfig);
+
+// Función para actualizar el gráfico con los datos de Firebase
+const updateChart = () => {
+  fetch('/api/v1/landing')
+    .then(response => response.json())
+    .then(data => {
+      const animalCounts = countAnimals(data);
+
+      // Actualizar los datos del gráfico
+      window.myLine.data.labels = Object.keys(animalCounts);
+      window.myLine.data.datasets[0].data = Object.values(animalCounts);
+
+      // Refrescar el gráfico
+      window.myLine.update();
+    })
+    .catch(error => console.error('Error al obtener datos:', error));
+};
+
+// Llamar a la función para cargar los datos iniciales
+updateChart();
